@@ -1,13 +1,8 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 @Entity()
 export class UserDB {
-  @PrimaryGeneratedColumn('increment')
-  id: string;
-
-  @Column({ primary: true })
-  @IsEmail({}, { message: 'Incorrect email' })
-  @IsNotEmpty({ message: 'The email is required' })
+  @Column({ primary: true, unique: true })
   email: string;
 
   @Column()
