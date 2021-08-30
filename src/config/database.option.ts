@@ -1,5 +1,4 @@
 import { ConnectionOptions } from 'typeorm';
-import { join } from 'path';
 import { UserDB } from '../user/entities/user.entity';
 
 export const optionsDB: ConnectionOptions = {

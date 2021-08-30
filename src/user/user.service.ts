@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -12,11 +12,15 @@ export class UserService {
     private readonly userRepository: Repository<UserDB>,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(image: Express.Multer.File, createUserDto: CreateUserDto) {
+    if (!image) {
+      throw new HttpException('Image not found', HttpStatus.BAD_REQUEST);
+    }
     const newUser = await this.userRepository.create({
       email: createUserDto.email,
       firstName: createUserDto.firstName,
       lastName: createUserDto.lastName,
+      image: image.filename,
     });
     await this.userRepository.save(newUser);
     return newUser;
