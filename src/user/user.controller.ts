@@ -17,6 +17,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { editFileName, imageFileFilter } from '../utils/file-upload.utils';
+import { CreatePdfDto } from './dto/create-pdf.dto';
 
 @Controller('user')
 export class UserController {
@@ -36,8 +37,6 @@ export class UserController {
     @UploadedFile() image: Express.Multer.File,
     @Body() createUserDto: CreateUserDto,
   ) {
-    console.log(image);
-
     return this.userService.create(image, createUserDto);
   }
 
@@ -46,15 +45,15 @@ export class UserController {
     return res.sendFile(image, { root: './files' });
   }
 
+  @Post('pdf')
+  createPdf(@Body() createPdfDto: CreatePdfDto) {
+    return this.userService.createPdf(createPdfDto);
+  }
+
   @Get()
   findAll() {
     return this.userService.findAll();
   }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.userService.findOne(+id);
-  // }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {

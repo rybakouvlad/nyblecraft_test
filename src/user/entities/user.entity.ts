@@ -1,4 +1,3 @@
-import { IsEmail, IsNotEmpty } from 'class-validator';
 import { Column, Entity } from 'typeorm';
 @Entity()
 export class UserDB {
@@ -14,6 +13,6 @@ export class UserDB {
   @Column({ nullable: true })
   image?: string;
 
-  @Column({ nullable: true })
-  pdf?: string;
+  @Column({ type: 'bytea', nullable: true })
+  pdf?: Buffer;
 }
