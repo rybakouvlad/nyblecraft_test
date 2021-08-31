@@ -18,7 +18,11 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    Logger.error(`${exception} URL: ${request.url}`, '', 'ExceptionFilter');
+    Logger.error(
+      `${exception} URL: ${request.url} Method: ${request.method}`,
+      '',
+      'ExceptionFilter',
+    );
 
     const response = ctx.getResponse<Response>();
 
@@ -27,6 +31,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       message: exception.message,
       timestamp: new Date().toISOString(),
       path: request.url,
+      method: request.method,
     });
   }
 }

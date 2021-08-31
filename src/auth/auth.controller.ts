@@ -23,9 +23,6 @@ export class AuthController {
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
   create(@Body() createProfileDto: CreateProfileDto) {
-    // console.log(createProfileDto);
-    console.log('kuku');
-
     return this.authService.create({ ...createProfileDto });
   }
 }

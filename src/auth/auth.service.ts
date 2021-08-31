@@ -16,8 +16,6 @@ export class AuthService {
   ) {}
 
   async create({ login, password }: CreateProfileDto) {
-    console.log(await this.checkLogin(login));
-
     if (await this.checkLogin(login)) {
       throw new HttpException(
         'User with this login exists',

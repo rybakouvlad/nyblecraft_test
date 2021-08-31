@@ -89,8 +89,6 @@ export class UserService {
     updateUserDto: UpdateUserDto,
   ) {
     const user = await this.userRepository.findOne(id);
-    console.log('QQQ', updateUserDto);
-    console.log('Img:', image);
 
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
