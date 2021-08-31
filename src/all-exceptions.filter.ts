@@ -13,7 +13,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const request = ctx.getRequest<Request>();
-    const message = exception.getResponse();
     const status =
       exception instanceof HttpException
         ? exception.getStatus()
@@ -24,7 +23,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
 
     response.status(status).json({
-      message: message,
+      status: status,
+      message: exception.message,
       timestamp: new Date().toISOString(),
       path: request.url,
     });

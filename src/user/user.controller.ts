@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { Express } from 'express';
 import { UserService } from './user.service';
@@ -18,7 +19,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { editFileName, imageFileFilter } from '../utils/file-upload.utils';
 import { CreatePdfDto } from './dto/create-pdf.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -50,7 +53,7 @@ export class UserController {
     return this.userService.createPdf(createPdfDto);
   }
 
-  @Get()
+  @Get('')
   findAll() {
     return this.userService.findAll();
   }

@@ -1,7 +1,8 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { IuserResponse } from '../userResponce.interface';
 @Entity()
 export class UserDB {
-  @Column({ primary: true, unique: true })
+  @PrimaryColumn({ unique: true })
   email: string;
 
   @Column()
@@ -15,4 +16,14 @@ export class UserDB {
 
   @Column({ type: 'bytea', nullable: true })
   pdf?: Buffer;
+
+  static toResponse(user: UserDB): IuserResponse {
+    return {
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      image: user.image,
+      pdf: user.pdf ? true : false,
+    };
+  }
 }

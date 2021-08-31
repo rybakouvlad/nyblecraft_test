@@ -6,6 +6,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserDB } from './entities/user.entity';
 import * as PDFDocument from 'pdfkit';
+import { IuserResponse } from './userResponce.interface';
 
 const IMG_PATH = './files/';
 @Injectable()
@@ -64,10 +65,12 @@ export class UserService {
     return { load: true };
   }
 
-  async findAll(): Promise<UserDB[] | null> {
+  async findAll(): Promise<IuserResponse[] | null> {
     const users = await this.userRepository.find({});
     if (users) {
-      return users;
+      return users.map((user) => {
+        return UserDB.toResponse(user);
+      });
     }
     return null;
   }

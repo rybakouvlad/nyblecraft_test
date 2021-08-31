@@ -1,4 +1,5 @@
 import { ConnectionOptions } from 'typeorm';
+import { AuthDB } from '../auth/entity/auth.entity';
 import { UserDB } from '../user/entities/user.entity';
 
 export const optionsDB: ConnectionOptions = {
@@ -9,13 +10,10 @@ export const optionsDB: ConnectionOptions = {
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
   synchronize: true,
-  //   migrationsRun: true,
   logging: false,
-  //   entities: [join(__dirname, '../**/entities/*.entity{.ts,.js}')],
-  entities: [UserDB],
-  //   migrations: [join(__dirname, '../migrations/*{.ts,.js}')],
+  entities: [UserDB, AuthDB],
+
   cli: {
-    // migrationsDir: 'src/migrations/',
     entitiesDir: 'src/**/entities/*.entity{.ts,.js}',
   },
 };
