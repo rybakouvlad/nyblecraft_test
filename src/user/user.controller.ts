@@ -21,11 +21,11 @@ import { editFileName, imageFileFilter } from '../utils/file-upload.utils';
 import { CreatePdfDto } from './dto/create-pdf.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-@UseGuards(JwtAuthGuard)
+
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
+  @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor('image', {
@@ -48,21 +48,25 @@ export class UserController {
     return res.sendFile(image, { root: './files' });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('pdf')
   createPdf(@Body() createPdfDto: CreatePdfDto) {
     return this.userService.createPdf(createPdfDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('')
   findAll() {
     return this.userService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   @UseInterceptors(
     FileInterceptor('image', {
@@ -81,6 +85,7 @@ export class UserController {
     return this.userService.update(id, image, updateUserDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(id);
