@@ -27,7 +27,7 @@ export class UserService {
       );
     }
     if (!image) {
-      throw new HttpException('Image not found', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Image not found', HttpStatus.NOT_FOUND);
     }
     const newUser = await this.userRepository.create({
       email: createUserDto.email,
@@ -75,15 +75,40 @@ export class UserService {
     return null;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    const user = await this.userRepository.findOne(id);
+    if (user) {
+      return UserDB.toResponse(user);
+    }
+    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(
+    id: string,
+    image: Express.Multer.File,
+    updateUserDto: UpdateUserDto,
+  ) {
+    const user = await this.userRepository.findOne(id);
+    console.log('QQQ', updateUserDto);
+    console.log('Img:', image);
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    const newUser = await this.userRepository.save({
+      ...user,
+      ...updateUserDto,
+      image: image.filename,
+    });
+    return UserDB.toResponse(newUser);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    const user = await this.userRepository.findOne(id);
+    if (user) {
+      await this.userRepository.delete(id);
+      throw new HttpException('User was deleted', HttpStatus.OK);
+    }
+    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   }
 }

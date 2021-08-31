@@ -1,8 +1,11 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 import { IuserResponse } from '../userResponce.interface';
 @Entity()
 export class UserDB {
-  @PrimaryColumn({ unique: true })
+  @PrimaryGeneratedColumn('uuid')
+  id?: string;
+
+  @Column({ unique: true })
   email: string;
 
   @Column()
@@ -19,6 +22,7 @@ export class UserDB {
 
   static toResponse(user: UserDB): IuserResponse {
     return {
+      id: user.id,
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
