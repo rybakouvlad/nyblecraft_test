@@ -1,0 +1,266 @@
+openapi: 3.0.0
+info:
+  title: Trello Service
+  description: Let's try to create a competitor for Trello!
+  version: 1.0.0
+
+servers:
+  - url: /
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email: string
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        image:
+          type: string;
+        pdf: 
+          type: boolean
+    Auth:
+      login:
+        type: string;
+      password:
+        type: string;
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []
+
+paths:
+  /user:
+    get:
+      tags:
+        - Users
+      summary: Get all users
+      description: Gets all users (remove password from response)
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+    post:
+      tags:
+        - Users
+      summary: Create user
+      description: Creates a new user
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: exaple@gmail.com
+                firstName:
+                  type: string
+                  description: The user's fist name
+                lastName:
+                  type: string
+                  description: The user's lastName
+                image: 
+                  type: string
+                  format: binary
+      responses:
+        201:
+          description: The user has been created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: Bad request
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+  /user/{userId}:
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Users
+      summary: Get user by ID
+      description: Gets a user by ID
+        e.g. “/user/123”
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: User not found
+    put:
+      tags:
+        - Users
+      summary: Update a user
+      description: Updates a user by ID
+      requestBody:
+        required: true
+        content:
+         multipart/form-data:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: exaple@gmail.com
+                firstName:
+                  type: string
+                  description: The user's fist name
+                lastName:
+                  type: string
+                  description: The user's lastName
+                image: 
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: The user has been updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: Bad request
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+    delete:
+      tags:
+        - Users
+      summary: Delete user
+      description: Deletes user by ID. When somebody
+        DELETE User, all Tasks where User is assignee
+        should be updated to put userId=null
+      responses:
+        204:
+          description: The user has been deleted
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: User not found
+  /user/pdf:
+    post:
+      tags:
+        - Users
+      summary: Create user PDF
+      description: Create user PDF
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              title: example
+              properties:
+                email:
+                  type: string
+                  description: The user's email
+              required:
+                - email
+      responses:
+        201:
+          description: The pdf has been created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: Bad request
+        401:
+          $ref: '#/components/responses/UnauthorizedError'      
+  /auth/login:
+    post:
+      tags:
+        - Login
+      security: []
+      summary: Login
+      description: Logins a user and returns a JWT-token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              title: example
+              properties:
+                login:
+                  type: string
+                  description: Username
+                password:
+                  type: string
+                  description: Password
+              required:
+                - user
+                - login
+      responses:
+        200:
+          description: Successful login.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                description: JWT Token
+        403:
+          description: Incorrect login or password
+  /auth/create:
+    post:
+      tags:
+        - Login
+      security: []
+      summary: Registration
+      description: Logins a user and returns a JWT-token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              title: example
+              properties:
+                login:
+                  type: string
+                  description: Username
+                password:
+                  type: string
+                  description: Password
+              required:
+                - user
+                - login
+      responses:
+        201:
+          description: Successful registration.
+        403:
+          description: Incorrect login or password
+        
